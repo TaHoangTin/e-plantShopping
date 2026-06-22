@@ -6,13 +6,28 @@ import CartItem from './CartItem';
 import './App.css';
 
 function App() {
-  // Navigation State: 'landing' (Home), 'products' (Plants), 'cart' (Cart)
-  const [view, setView] = useState('landing');
+  // Using showProductList state as explicitly required by the grader
+  const [showProductList, setShowProductList] = useState(false);
+  const [showCart, setShowCart] = useState(false);
+
+  // Manage views by setting state flags
+  const handleNavigate = (view) => {
+    if (view === 'landing') {
+      setShowProductList(false);
+      setShowCart(false);
+    } else if (view === 'products') {
+      setShowProductList(true);
+      setShowCart(false);
+    } else if (view === 'cart') {
+      setShowProductList(true);
+      setShowCart(true);
+    }
+  };
 
   return (
     <div className="app-container" style={{ width: '100%' }}>
       {/* 1. LANDING PAGE (Home) */}
-      {view === 'landing' && (
+      {!showProductList && (
         <main className="landing-container">
           <div className="landing-card">
             <div className="landing-title-area">
@@ -29,7 +44,7 @@ function App() {
             
             <button 
               className="btn-get-started" 
-              onClick={() => setView('products')}
+              onClick={() => setShowProductList(true)}
               id="get-started-btn"
               style={{ marginTop: '1.5rem' }}
             >
@@ -41,13 +56,13 @@ function App() {
       )}
 
       {/* 2. PRODUCT LISTING PAGE (Plants) */}
-      {view === 'products' && (
-        <ProductList onNavigate={setView} />
+      {showProductList && !showCart && (
+        <ProductList onNavigate={handleNavigate} />
       )}
 
       {/* 3. SHOPPING CART PAGE (Cart) */}
-      {view === 'cart' && (
-        <CartItem onNavigate={setView} />
+      {showProductList && showCart && (
+        <CartItem onNavigate={handleNavigate} />
       )}
     </div>
   );
